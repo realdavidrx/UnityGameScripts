@@ -1,2 +1,1 @@
-# UnityGameScripts
-# Using unity because of its use of csharp
+Using unity because of its use of csharp
