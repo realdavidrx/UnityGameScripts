@@ -1,18 +1,21 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 public class PlayerMovement : MonoBehaviour
 {
     [SerializeField]
     private float gravityScale = 5f;
-    public float movementSpeed;
-    private Rigidbody2D rb;
+    [SerializeField]
+    public float movementSpeed = 6f;
+    public Rigidbody2D rb;
 public Animator anim;
-
+    public LayerMask iceLayers;
+    public LayerMask sandLayers;
     public Transform feet;
     public LayerMask groundLayers;
         [SerializeField]
-    private float jumpForce = 8f;
+    private float jumpForce = 5f;
     private bool pressedJump = false;
     private bool releasedJump = false;
     private bool startTimer = false;
@@ -20,7 +23,8 @@ public Animator anim;
     private float jumpTimer = 0.5f;
     private float timer;
     float mx;
-    [HideInInspector] public bool isFacingRight = true;
+    [HideInInspector] 
+    public bool isFacingRight = true;
 
     private void Awake() {
         rb = GetComponent<Rigidbody2D>();
@@ -83,13 +87,33 @@ public Animator anim;
         startTimer = true;
     }
 
+    public bool IsOnIce() {
+        Collider2D iceCheck = (Physics2D.OverlapCircle(feet.position, 0.25f, iceLayers));
+        if (iceCheck != null) {
+            movementSpeed = 15f;
+            return true;
+        }
+            movementSpeed = 7f;
+            return false;
+    }
+        public bool IsOnSand() {
+        Collider2D sandCheck = (Physics2D.OverlapCircle(feet.position, 0.25f, sandLayers));
+        if (sandCheck != null) {
+            movementSpeed = 3f;
+            return true;
+        }
+            movementSpeed = 7f;
+            return false;
+    }
+
     public bool IsGrounded() {
         Collider2D groundCheck = Physics2D.OverlapCircle(feet.position, 0.25f, groundLayers);
         if (groundCheck != null) {
             return true;
         }
-
         return false;
+
+        
     }
     
     private void StopJump() {
@@ -98,4 +122,5 @@ public Animator anim;
         timer = jumpTimer;
         startTimer = false;
     }
+
 }

@@ -1,13 +1,15 @@
 ﻿using UnityEngine;
-
+using System.Collections;
+using System.Collections.Generic;
 public class PlayerShoot : MonoBehaviour
 {
     public float fireRate = 0.25f;
     public Transform firingPoint;
     public GameObject bulletPrefab;
+    
+    private float timeUntilFire;
     PlayerMovement pm;
 
-    private float timeUntilFire;
 
     private void Start() {
         pm = gameObject.GetComponent<PlayerMovement>();
@@ -21,6 +23,5 @@ public class PlayerShoot : MonoBehaviour
     void Shoot() {
         float angle = pm.isFacingRight ? 0f : 180f;
         Instantiate(bulletPrefab, firingPoint.position, Quaternion.Euler(new Vector3(0f, 0f, angle)));
-                                                                        //Vector 4 CONFIRMED REAL?!?!?!?!?!?!!?!?
     }
 }
