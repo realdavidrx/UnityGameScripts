@@ -9,7 +9,7 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField]
     public float movementSpeed = 6f;
     public Rigidbody2D rb;
-public Animator anim;
+    public Animator anim;
     public LayerMask iceLayers;
     public LayerMask sandLayers;
     public Transform feet;
@@ -21,20 +21,19 @@ public Animator anim;
     private bool startTimer = false;
     [SerializeField]
     private float jumpTimer = 0.5f;
-    private float timer;
+    private float jtimer;
     float mx;
     [HideInInspector] 
     public bool isFacingRight = true;
 
-    private void Awake() {
+    private void Awake() { 
         rb = GetComponent<Rigidbody2D>();
         
-        timer = jumpTimer;
+        jtimer = jumpTimer;
     }
-
     private void Update() {
         mx = Input.GetAxisRaw("Horizontal");
-
+        
         if (Input.GetButtonDown("Jump") && IsGrounded()) {
             pressedJump = true;
         }
@@ -45,8 +44,8 @@ public Animator anim;
         }
 
         if (startTimer) {
-            timer -= Time.deltaTime;
-            if(timer <= 0) {
+            jtimer -= Time.deltaTime;
+            if(jtimer <= 0) {
                 releasedJump= true;
             }
             
@@ -64,17 +63,15 @@ public Animator anim;
         } else if (mx < 0f) {
         transform.localScale = new Vector3 (-6f, 6f, 6f);
         isFacingRight = false;
-        }
+        } 
     anim.SetBool("isGrounded", IsGrounded());
      }
     private void FixedUpdate() {
         Vector2 movement = new Vector2(mx * movementSpeed, rb.velocity.y);
-
         rb.velocity = movement;
         if (pressedJump) {
             StartJump();
         }
-
         if (releasedJump) {
             StopJump();
         }
@@ -119,8 +116,12 @@ public Animator anim;
     private void StopJump() {
         rb.gravityScale = gravityScale;
         releasedJump = false;
-        timer = jumpTimer;
+        jtimer = jumpTimer;
         startTimer = false;
     }
-
+   private void OnCollisionEnter2D(Collision2D collision) {
+        if (collision.gameObject.CompareTag("EndZone")) {
+        MainScript.instance.EndGame();
+        }
+   } 
 }
